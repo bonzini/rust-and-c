@@ -1,6 +1,16 @@
 pub use bindgen::foo::Foo;
-pub use bindgen::foo::foo_get;
-pub use bindgen::foo::foo_set;
+
+#[no_mangle]
+pub unsafe extern fn foo_get(foo: *const Foo) -> std::os::raw::c_int {
+    let foo = &*foo;
+    foo.x
+}
+
+#[no_mangle]
+pub unsafe extern fn foo_set(foo: *mut Foo, value: std::os::raw::c_int) {
+    let foo = &mut *foo;
+    foo.x = value
+}
 
 #[cfg(test)]
 mod tests {

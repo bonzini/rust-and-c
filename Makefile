@@ -7,7 +7,8 @@ PROGRAMS = main
 STATICLIBS = libfoo.a
 
 CARGO_LIBS = foo
-CARGO_SOURCES = src/lib.rs
+CARGO_SOURCES = src/foo.rs src/lib.rs \
+	src/bindgen/mod.rs src/bindgen/foo.rs
 
 CARGO_STATICLIBS = $(CARGO_LIBS:%=target/$(CARGO_TARGET)/lib%.a)
 
@@ -29,6 +30,9 @@ libfoo.a: src/foo.o
 
 src/main.o: src/main.c src/foo.h
 src/foo.o: src/foo.c src/foo.h
+
+src/bindgen/foo.rs: src/foo.h
+	bindgen --no-rustfmt-bindings $< > $@
 
 .PHONY: $(CARGO_STATICLIBS) cargo-build-lib
 $(CARGO_STATICLIBS): cargo-build-lib
